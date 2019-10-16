@@ -1,14 +1,14 @@
 package starter
 
-import "github.com/IMQS/nf"
+import "github.com/IMQS/nf/nfdb"
 
 type frogType struct {
-	nf.Model
+	nfdb.Model
 	Description string
 }
 
 type frog struct {
-	nf.Model
+	nfdb.Model
 	Description string
 	FrogTypeID  int64
 }

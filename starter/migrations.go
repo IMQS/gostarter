@@ -2,7 +2,7 @@ package starter
 
 import (
 	"github.com/IMQS/log"
-	"github.com/IMQS/nf"
+	"github.com/IMQS/nf/nfdb"
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 )
@@ -11,10 +11,10 @@ import (
 
 var migrationsSQL []string
 
-func openDB(log *log.Logger, dbConf nf.DBConfig) (*gorm.DB, error) {
-	var flags nf.DBConnectFlags
-	flags |= nf.DBConnectFlagWipeDB
-	db, err := nf.OpenDB(log, dbConf.Driver, dbConf.DSN(), nf.MakeMigrations(log, migrationsSQL), flags)
+func openDB(log *log.Logger, dbConf nfdb.DBConfig) (*gorm.DB, error) {
+	var flags nfdb.DBConnectFlags
+	flags |= nfdb.DBConnectFlagWipeDB
+	db, err := nfdb.OpenDB(log, dbConf.Driver, dbConf.DSN(), nfdb.MakeMigrations(log, migrationsSQL), flags)
 	if err != nil {
 		return nil, err
 	}
