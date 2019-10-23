@@ -39,8 +39,8 @@ func (s *Service) addFrogs(w http.ResponseWriter, r *http.Request, p httprouter.
 	nf.ReadJSON(r, &frogs)
 	for _, f := range frogs {
 		mf := frog{
-			FrogTypeID:  f.FrogTypeID,
-			Description: f.Description,
+			FrogTypeID:  &f.FrogTypeID,
+			Description: &f.Description,
 		}
 		s.db.Create(&mf)
 		nf.Check(s.db.Error)

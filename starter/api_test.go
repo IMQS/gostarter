@@ -16,7 +16,7 @@ const httpPort = 2000
 func startServer(t *testing.T) *Service {
 	s := NewService()
 	s.config.HttpPort = httpPort
-	s.config.DB = nftest.MakeDBConfig("starter")
+	s.config.DB = nftest.MakeDBConfig("starter", true)
 	s.log = log.NewTesting(t)
 	serviceauth.ActivateMockToken(1, "user@example.com", []int{permissions.PermEnabled, permissions.PermReportCreator})
 	s.Initialize()
@@ -31,12 +31,14 @@ func baseURL() string {
 
 func TestFrogCRUD(t *testing.T) {
 	startServer(t)
-	nftest.POSTJson(t, baseURL()+"/frog/add", `[{"FrogTypeID": 123, "Description": "bullfrog"},{"FrogTypeID": 666, "Description": "toad"}]`, 200)
-	nftest.GETJson(t, baseURL()+"/frog/list", `>>"FrogTypeID":123`)
-	nftest.GETJson(t, baseURL()+"/frog/list", `>>"FrogTypeID":666`)
-	nftest.GETJson(t, baseURL()+"/frog/list", `>>"Description":"bullfrog"`)
-	nftest.GETJson(t, baseURL()+"/frog/list", `>>"Description":"toad"`)
-	nftest.GETJson(t, baseURL()+"/frog/list?type=123", `!>>"Description":"toad"`)
-	nftest.GETJson(t, baseURL()+"/frog/list?type=123", `>>"Description":"bullfrog"`)
+	nftest.POSTJson(t, baseURL()+"/frog/add", `[{"frogTypeID": 123, "description": "bullfrog"},{"frogTypeID": 666, "description": "toad"}]`, 200)
+	nftest.GETJson(t, baseURL()+"/frog/list", `>>"frogTypeID":123`)
+	nftest.GETJson(t, baseURL()+"/frog/list", `>>"frogTypeID":666`)
+	nftest.GETJson(t, baseURL()+"/frog/list", `>>"description":"bullfrog"`)
+	nftest.GETJson(t, baseURL()+"/frog/list", `>>"description":"toad"`)
+	nftest.GETJson(t, baseURL()+"/frog/list?type=123", `>>"id":1`)
+	nftest.GETJson(t, baseURL()+"/frog/list?type=666", `>>"id":2`)
+	nftest.GETJson(t, baseURL()+"/frog/list?type=123", `!>>"description":"toad"`)
+	nftest.GETJson(t, baseURL()+"/frog/list?type=123", `>>"description":"bullfrog"`)
 	nftest.GETDump(t, baseURL()+"/frog/list?type=123")
 }
